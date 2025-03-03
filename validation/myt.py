@@ -16,6 +16,7 @@ async def test_my_score():
     synapse2 = NATextSynapse()
     synapse2.prompt_text = prompt_text
     synapse2.timeout = 120
+    synapse2.dendrite.hotkey = "5F4tQyWrhfGVcNhoqeiNsR6KjD4wMZ2kfhLj4oHYuyHbZAc3"
     # 生成模型
     synapse = await miner.forward_text(synapse2)
     print(f"success generate synapse:{synapse}")
