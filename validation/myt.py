@@ -10,14 +10,14 @@ from validation.validation_endpoint import Validation
 
 async def test_my_score():
     prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
-    destination_folder = './validation/results'
+    destination_folder = './validation/results/186'
 
     miner = Miner()
     synapse2 = NATextSynapse()
     synapse2.prompt_text = prompt_text
     synapse2.timeout = 120
     # 生成模型
-    synapse = miner.forward_text(synapse2)
+    synapse = await miner.forward_text(synapse2)
     print(f"success generate synapse:{synapse}")
 
     # 复制文件到验证器文件夹
@@ -31,7 +31,7 @@ async def test_my_score():
         print(f"复制文件时出错: {e}")
 
     validation = Validation()
-    resp = ValidateRequest(prompt=prompt_text)
+    resp = ValidateRequest(prompt=prompt_text, uid=186)
     # 校验得分
     score = validation.validate(resp)
     print(f"test_my_score: {score}")
