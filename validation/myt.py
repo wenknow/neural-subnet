@@ -13,7 +13,7 @@ async def test_my_score():
     prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
     destination_folder = './validation/results'
 
-    synapse = NATextSynapse(prompt_text=prompt_text)
+    synapse = NATextSynapse(prompt_text=prompt_text, timeout=120)
     # 生成模型
     synapse = await generate(synapse)
     print(f"success generate synapse:{synapse}")
