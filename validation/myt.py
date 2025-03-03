@@ -2,8 +2,8 @@ import asyncio
 import os
 import shutil
 
-from neuralai.miner.utils import generate
 from neuralai.protocol import NATextSynapse
+from neurons.miner import Miner
 from validation.models import ValidateRequest
 from validation.validation_endpoint import Validation
 
@@ -12,11 +12,12 @@ async def test_my_score():
     prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
     destination_folder = './validation/results'
 
+    miner = Miner()
     synapse2 = NATextSynapse()
     synapse2.prompt_text = prompt_text
     synapse2.timeout = 120
     # 生成模型
-    synapse = await generate(synapse2)
+    synapse = miner.forward_text(synapse2)
     print(f"success generate synapse:{synapse}")
 
     # 复制文件到验证器文件夹
