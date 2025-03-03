@@ -1,3 +1,4 @@
+import asyncio
 import os
 import shutil
 
@@ -33,4 +34,4 @@ async def test_my_score():
     print(f"test_my_score: {score}")
 
 if __name__ == '__main__':
-    test_my_score()
+    asyncio.run(test_my_score())
