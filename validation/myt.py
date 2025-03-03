@@ -24,8 +24,8 @@ async def test_my_score():
     if not os.path.exists(destination_folder):
         os.makedirs(destination_folder)
     try:
-        shutil.copy("../generate/outputs/text_to_3d/preview.png", destination_folder)
-        shutil.copy("../generate/outputs/text_to_3d/output.glb", destination_folder)
+        shutil.copy("../generate/outputs/text_to_3d/mesh.png", destination_folder + '/preview.png')
+        shutil.copy("../generate/outputs/text_to_3d/mesh.glb", destination_folder + '/output.glb')
         print(f"文件已成功复制到 {destination_folder}")
     except Exception as e:
         print(f"复制文件时出错: {e}")
