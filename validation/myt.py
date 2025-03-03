@@ -2,6 +2,7 @@ import asyncio
 import os
 import shutil
 
+import bittensor as bt
 from neuralai.miner.utils import generate
 from neuralai.protocol import NATextSynapse
 from validation.models import ValidateRequest
@@ -13,7 +14,9 @@ async def test_my_score():
     prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
     destination_folder = './validation/results'
 
-    synapse = NATextSynapse(prompt_text=prompt_text, timeout=120)
+    synapse = bt.Synapse()
+    synapse.prompt_text = prompt_text
+    synapse.timeout = 120
     # 生成模型
     synapse = await generate(synapse)
     print(f"success generate synapse:{synapse}")
@@ -32,6 +35,7 @@ async def test_my_score():
     # 校验得分
     score = validation.validate(resp)
     print(f"test_my_score: {score}")
+
 
 if __name__ == '__main__':
     asyncio.run(test_my_score())
