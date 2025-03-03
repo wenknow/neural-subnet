@@ -2,9 +2,6 @@ import asyncio
 import os
 import shutil
 
-import bittensor as bt
-from pydantic import BaseModel
-
 from neuralai.miner.utils import generate
 from neuralai.protocol import NATextSynapse
 from validation.models import ValidateRequest
@@ -12,11 +9,10 @@ from validation.validation_endpoint import Validation
 
 
 async def test_my_score():
-    validation = Validation()
     prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
     destination_folder = './validation/results'
 
-    synapse2 = bt.Synapse()
+    synapse2 = NATextSynapse()
     synapse2.prompt_text = prompt_text
     synapse2.timeout = 120
     # 生成模型
@@ -33,6 +29,7 @@ async def test_my_score():
     except Exception as e:
         print(f"复制文件时出错: {e}")
 
+    validation = Validation()
     resp = ValidateRequest(prompt=prompt_text)
     # 校验得分
     score = validation.validate(resp)
