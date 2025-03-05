@@ -49,6 +49,7 @@ class Text2Image():
         '''
         prompt = prompt + ",白色背景,3D风格,最佳质量"
         seed_everything(seed)
+        print(f"real seed:{seed} steps:{steps} prompt_txt:{prompt}")
         generator = torch.Generator(device=self.device)
         if seed is not None: generator = generator.manual_seed(int(seed))
         rgb = self.pipe(prompt=prompt, negative_prompt=self.neg_txt, num_inference_steps=steps, 
