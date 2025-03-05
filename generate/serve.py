@@ -80,6 +80,7 @@ async def text_to_3d(prompt: str = Body()):
     # Stage 1: Text to Image
     start = time.time()
     decoded_prompt = unquote_plus(prompt)
+    print(f"get prompt: {decoded_prompt}")
     res_rgb_pil = text_to_image_model(
         decoded_prompt,
         seed=args.t2i_seed,
