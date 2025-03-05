@@ -58,7 +58,7 @@ async def generate(self, synapse: bt.Synapse) -> bt.Synapse:
     timeout = synapse.timeout
     prompt = synapse.prompt_text
     
-    extra_prompts = "white background,3d model,4K ultra-detailed,Unreal Engine 5 rendering,PBR metallic workflow (roughness 0.1, specular 0.9),depth of field,cinematic composition,physically accurate materials"
+    extra_prompts = "3d model,4K detail,Unreal Engine 5,PBR材质(金属度0.9),工作室布光,景深,多角度渲染,写实摄影,锐利边缘,无瑕反射, --ar 16:9 --seed 42 --v 5.2"
     enhanced_prompt = f"{prompt}, {extra_prompts}"
     
     if type(synapse).__name__ == "NATextSynapse":
