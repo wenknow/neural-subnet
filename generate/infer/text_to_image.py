@@ -47,7 +47,7 @@ class Text2Image():
             return:
                 rgb: PIL.Image
         '''
-        prompt = prompt + ",白色背景,3D风格,最佳质量"
+        # prompt = prompt + ",白色背景,3D风格,最佳质量"
         seed_everything(seed)
         print(f"real seed:{seed} steps:{steps} prompt_txt:{prompt}")
         generator = torch.Generator(device=self.device)
