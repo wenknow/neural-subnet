@@ -79,7 +79,7 @@ async def text_to_3d(prompt: str = Body()):
 
     # Stage 1: Text to Image
     start = time.time()
-    # prompt = unquote_plus(prompt)
+    prompt = unquote_plus(prompt)
     print(f"get prompt: {prompt}")
     res_rgb_pil = text_to_image_model(
         prompt,
