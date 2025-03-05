@@ -5,6 +5,7 @@ from PIL import Image
 import argparse
 from fastapi import FastAPI, HTTPException, Body
 import uvicorn
+from urllib.parse import unquote_plus
 
 from infer import Text2Image, Removebg, Image2Views, Views2Mesh, GifRenderer
 
@@ -78,8 +79,9 @@ async def text_to_3d(prompt: str = Body()):
 
     # Stage 1: Text to Image
     start = time.time()
+    decoded_prompt = unquote_plus(prompt)
     res_rgb_pil = text_to_image_model(
-        prompt,
+        decoded_prompt,
         seed=args.t2i_seed,
         steps=args.t2i_steps
     )
