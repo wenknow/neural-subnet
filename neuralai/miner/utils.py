@@ -58,8 +58,8 @@ async def generate(self, synapse: bt.Synapse) -> bt.Synapse:
     timeout = synapse.timeout
     prompt = synapse.prompt_text
     
-    extra_prompts = "白色背景,3D风格,最佳质量"
-    enhanced_prompt = f"{prompt},{extra_prompts}"
+    # extra_prompts = "白色背景,3D风格,最佳质量"
+    enhanced_prompt = prompt
     
     if type(synapse).__name__ == "NATextSynapse":
         result = await _generate_from_text(gen_url=url, timeout=timeout, prompt=enhanced_prompt)
