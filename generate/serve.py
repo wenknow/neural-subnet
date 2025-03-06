@@ -28,7 +28,9 @@ def get_args():
     parser.add_argument("--do_texture_mapping", default=False, action="store_true")
     parser.add_argument("--do_render", default=False, action="store_true")
     parser.add_argument("--port", default=8093, type=int)
-    return parser.parse_args()
+    args = parser.parse_args()
+    print(f"args: {args}")
+    return args
 
 args = get_args()
 
