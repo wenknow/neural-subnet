@@ -58,7 +58,7 @@ async def generate(self, synapse: bt.Synapse) -> bt.Synapse:
     timeout = synapse.timeout
     prompt = synapse.prompt_text
     
-    # extra_prompts = "白色背景,3D风格,最佳质量"
+    # extra_prompts = "Angled front view, solid color background, 3d model, high quality"
     enhanced_prompt = prompt
     
     if type(synapse).__name__ == "NATextSynapse":

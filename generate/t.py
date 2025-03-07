@@ -1,22 +1,64 @@
+import argparse
 import os
-import sys
+import time
 
-from infer import Text2Image
+from PIL import Image
 
-text_to_image_model = Text2Image(pretrain="weights/hunyuanDiT", device="cuda:0", save_memory=False)
+from infer import Removebg, Image2Views, Views2Mesh
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--use_lite", default=False, action="store_true")
+    parser.add_argument("--mv23d_cfg_path", default="./svrm/configs/svrm.yaml", type=str)
+    parser.add_argument("--mv23d_ckt_path", default="weights/svrm/svrm.safetensors", type=str)
+    parser.add_argument("--text2image_path", default="weights/hunyuanDiT", type=str)
+    parser.add_argument("--save_folder", default="outputs/", type=str)
+    parser.add_argument("--device", default="cuda:0", type=str)
+    parser.add_argument("--t2i_seed", default=0, type=int)
+    parser.add_argument("--t2i_steps", default=25, type=int)
+    parser.add_argument("--gen_seed", default=0, type=int)
+    parser.add_argument("--gen_steps", default=50, type=int)
+    parser.add_argument("--max_faces_num", default=90000, type=int)
+    parser.add_argument("--save_memory", default=False, action="store_true")
+    parser.add_argument("--do_texture_mapping", default=False, action="store_true")
+    parser.add_argument("--do_render", default=False, action="store_true")
+    parser.add_argument("--port", default=8093, type=int)
+    args = parser.parse_args()
+    print(f"args: {args}")
+    return args
+
+
+args = get_args()
+
+rembg_model = Removebg()
+image_to_views_model = Image2Views(device=args.device, use_lite=args.use_lite)
+views_to_mesh_model = Views2Mesh(args.mv23d_cfg_path, args.mv23d_ckt_path, args.device, use_lite=args.use_lite)
 output_folder = os.path.join("../validation/validation/results", "173")
 
-if len(sys.argv) > 1:
-    prompt = sys.argv[1]
-    ext = sys.argv[2]
-    steps = sys.argv[3]
-    seed = sys.argv[4]
-else:
-    exit("argv error")
 
-res_rgb_pil = text_to_image_model(
-    prompt + ext,
-    seed=int(seed),
-    steps=int(steps)
+start = time.time()
+# Load an image
+image = Image.open(os.path.join(output_folder, "preview.png"))
+
+# Stage 2: Remove Background
+res_rgba_pil = rembg_model(image)
+
+# Stage 3: Image to Views
+(views_grid_pil, cond_img), view_pil_list = image_to_views_model(
+    res_rgba_pil,
+    seed=args.gen_seed,
+    steps=args.gen_steps
 )
-res_rgb_pil.save(os.path.join(output_folder, "preview.png"))
+
+# Stage 4: Views to Mesh
+views_to_mesh_model(
+    views_grid_pil,
+    cond_img,
+    seed=args.gen_seed,
+    target_face_count=args.max_faces_num,
+    save_folder=output_folder,
+    do_texture_mapping=args.do_texture_mapping
+)
+
+print(f"Generation time: {time.time() - start}")
