@@ -1,11 +1,12 @@
 import asyncio
+import sys
 
 from validation.models import ValidateRequest
 from validation.validation_endpoint import Validation
 
 
-async def test_my_score():
-    prompt_text = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
+async def test_my_score(prompt):
+    prompt_text = prompt
 
     validation = Validation()
     resp = ValidateRequest(prompt=prompt_text, uid=173)
@@ -15,4 +16,8 @@ async def test_my_score():
 
 
 if __name__ == '__main__':
-    asyncio.run(test_my_score())
+    if len(sys.argv) > 1:
+        prompt = sys.argv[1]
+    else:
+        prompt = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
+    asyncio.run(test_my_score(prompt))
