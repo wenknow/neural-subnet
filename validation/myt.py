@@ -3,24 +3,31 @@ import os
 import shutil
 import sys
 
-from neuralai.protocol import NATextSynapse
-from neurons.miner import Miner
+import aiohttp
+
 from validation.models import ValidateRequest
 from validation.validation_endpoint import Validation
 
 
-async def test_my_score(prompt, ext):
+async def test_my_score(url, prompt, ext, steps, seed):
     prompt_text = prompt
     destination_folder = './validation/results/186'
+    gen_url = url + "/generate_from_text/"
 
-    miner = Miner()
-    synapse2 = NATextSynapse()
-    synapse2.prompt_text = prompt_text + ',' + ext
-    synapse2.timeout = 600
-    synapse2.dendrite.hotkey = "5F4tQyWrhfGVcNhoqeiNsR6KjD4wMZ2kfhLj4oHYuyHbZAc3"
-    # 生成模型
-    synapse = await miner.forward_text(synapse2)
-    print(f"success generate synapse:{synapse}")
+    async with aiohttp.ClientSession() as session:
+        try:
+            client_timeout = aiohttp.ClientTimeout(total=float(600))
+            async with session.post(gen_url, timeout=client_timeout,
+                                    data={"prompt": prompt + ext, "steps": steps, "seed": seed}) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    print("Success:", result)
+                else:
+                    print(f"Generation failed. Please try again.: {response.status}")
+                    return
+        except Exception as e:
+            print(f"An unexpected error occurred: {e} ({gen_url})")
+            return
 
     # 复制文件到验证器文件夹
     if not os.path.exists(destination_folder):
@@ -41,9 +48,15 @@ async def test_my_score(prompt, ext):
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        prompt = sys.argv[1]
-        ext = sys.argv[2]
+        url = sys.argv[1]
+        prompt = sys.argv[2]
+        ext = sys.argv[3]
+        steps = sys.argv[4]
+        seed = sys.argv[5]
     else:
+        url = "http://localhost:9071"
         prompt = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
         ext = '白色背景,3D风格,最佳质量'
-    asyncio.run(test_my_score(prompt, ext))
+        steps = 25
+        seed = 0
+    asyncio.run(test_my_score(url, prompt, ext, steps, seed))
