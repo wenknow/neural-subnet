@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 
-import aiohttp
+import requests
 
 from validation.models import ValidateRequest
 from validation.validation_endpoint import Validation
@@ -14,20 +14,12 @@ async def test_my_score(url, prompt, ext, steps, seed):
     destination_folder = './validation/results/186'
     gen_url = url + "/generate_from_text/"
 
-    async with aiohttp.ClientSession() as session:
-        try:
-            client_timeout = aiohttp.ClientTimeout(total=float(600))
-            async with session.post(gen_url, timeout=client_timeout,
-                                    data={"prompt": prompt + ext, "steps": steps, "seed": seed}) as response:
-                if response.status == 200:
-                    result = await response.json()
-                    print("Success:", result)
-                else:
-                    print(f"Generation failed. Please try again.: {response.status}")
-                    return
-        except Exception as e:
-            print(f"An unexpected error occurred: {e} ({gen_url})")
-            return
+    params = {'prompt': prompt + ext, 'steps':steps, 'seed':seed}
+    response = requests.post(gen_url, json=params)
+    if response.status_code != 200:
+        print(f"err to request text_to_image. {response.text}")
+        return
+    print(f"response: {response.text}")
 
     # 复制文件到验证器文件夹
     if not os.path.exists(destination_folder):
