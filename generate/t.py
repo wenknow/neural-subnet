@@ -16,7 +16,7 @@ else:
 
 res_rgb_pil = text_to_image_model(
     prompt + ext,
-    seed=seed,
-    steps=steps
+    seed=int(seed),
+    steps=int(steps)
 )
 res_rgb_pil.save(os.path.join(output_folder, "preview.png"))
