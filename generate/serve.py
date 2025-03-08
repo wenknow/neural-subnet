@@ -3,7 +3,7 @@ import torch
 import time
 from PIL import Image
 import argparse
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Request, Body
 import uvicorn
 from urllib.parse import unquote_plus
 
@@ -75,13 +75,14 @@ def process_image_to_3d(res_rgb_pil, output_folder):
         )
 
 @app.post("/generate_from_text")
-async def text_to_3d(prompt: str = Body()):
+async def text_to_3d(request: Request):
     output_folder = os.path.join(args.save_folder, "text_to_3d")
     os.makedirs(output_folder, exist_ok=True)
 
     # Stage 1: Text to Image
     start = time.time()
-    prompt = unquote_plus(prompt)
+    params = await request.json()
+    prompt = unquote_plus(params['prompt'])
     print(f"get prompt: {prompt}")
     res_rgb_pil = text_to_image_model(
         prompt,
