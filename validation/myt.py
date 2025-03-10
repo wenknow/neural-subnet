@@ -15,7 +15,7 @@ async def test_my_score(url, prompt, ext, steps, seed):
     destination_folder = './validation/results/186'
     gen_url = url + "/generate_from_text/"
 
-    params = {'prompt': ext, 'steps':steps, 'seed':seed}
+    params = {'prompt': prompt + ext, 'steps':steps, 'seed':seed}
     response = requests.post(gen_url, json=params)
     if response.status_code != 200:
         print(f"err to request text_to_image. {response.text}")
