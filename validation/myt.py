@@ -20,8 +20,8 @@ async def test_my_score(url, prompt, ext, steps, seed):
     if response.status_code != 200:
         print(f"err to request text_to_image. {response.text}")
         return
-    time.sleep(15)
     print(f"response: {response.text}")
+    time.sleep(5)
 
     # 复制文件到验证器文件夹
     if not os.path.exists(destination_folder):
