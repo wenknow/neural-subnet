@@ -15,7 +15,7 @@ async def test_my_score(url, prompt, ext, steps, seed):
     destination_folder = './validation/results/186'
     gen_url = url + "/generate_from_text/"
 
-    params = {'prompt': prompt + ext, 'steps':steps, 'seed':seed}
+    params = {'prompt': ext, 'steps':steps, 'seed':seed}
     response = requests.post(gen_url, json=params)
     if response.status_code != 200:
         print(f"err to request text_to_image. {response.text}")
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     else:
         url = "http://localhost:9071"
         prompt = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade."
-        ext = '白色背景,3D风格,最佳质量'
+        ext = "A stainless steel chef's knife with a comfortable ergonomic handle and a razor-sharp blade.白色背景,3D风格,最佳质量"
         steps = 25
         seed = 0
     asyncio.run(test_my_score(url, prompt, ext, steps, seed))
